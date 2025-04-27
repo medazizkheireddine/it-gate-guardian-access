@@ -8,10 +8,10 @@ const AuthHeader = () => {
         <ShieldCheck className="w-6 h-6 text-primary" />
       </div>
       <h1 className="text-2xl font-semibold tracking-tight">
-        Welcome to IT Guardian
+        Autoliv IT Management
       </h1>
       <p className="text-sm text-muted-foreground">
-        Enter your credentials to access your account
+        Secure access for automotive safety technology
       </p>
     </div>
   );
