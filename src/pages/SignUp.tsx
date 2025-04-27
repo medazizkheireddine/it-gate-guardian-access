@@ -1,16 +1,16 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import AuthHeader from "@/components/AuthHeader";
 import { Lock, User } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const Login = () => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -19,16 +19,19 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual login logic
+      if (password !== confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+      // TODO: Implement actual signup logic
       toast({
-        title: "Login attempted",
-        description: "This is a demo. Authentication will be implemented later.",
+        title: "Sign up attempted",
+        description: "This is a demo. Registration will be implemented later.",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Invalid credentials. Please try again.",
+        description: error instanceof Error ? error.message : "An error occurred",
       });
     } finally {
       setIsLoading(false);
@@ -65,22 +68,17 @@ const Login = () => {
                 required
               />
             </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Checkbox id="remember" />
-              <label
-                htmlFor="remember"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Remember me
-              </label>
-            </div>
-            <div className="text-sm">
-              <a href="#" className="font-medium text-primary hover:text-primary/90">
-                Forgot password?
-              </a>
+            <div className="relative">
+              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+              <Input
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="pl-10 auth-input"
+                required
+              />
             </div>
           </div>
 
@@ -89,13 +87,13 @@ const Login = () => {
             className="w-full"
             disabled={isLoading}
           >
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Creating account..." : "Create Account"}
           </Button>
 
           <div className="text-center text-sm">
-            <span className="text-muted-foreground">Don't have an account? </span>
-            <Link to="/signup" className="font-medium text-primary hover:text-primary/90">
-              Sign up
+            <span className="text-muted-foreground">Already have an account? </span>
+            <Link to="/" className="font-medium text-primary hover:text-primary/90">
+              Sign in
             </Link>
           </div>
         </form>
@@ -104,4 +102,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
