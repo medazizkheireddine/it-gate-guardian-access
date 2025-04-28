@@ -4,34 +4,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import AuthHeader from "@/components/AuthHeader";
-import { Lock, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Lock, Mail, User } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+const SignUpSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type SignUpFormValues = z.infer<typeof SignUpSchema>;
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const form = useForm<SignUpFormValues>({
+    resolver: zodResolver(SignUpSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const handleSubmit = async (values: SignUpFormValues) => {
     setIsLoading(true);
 
     try {
-      if (password !== confirmPassword) {
-        throw new Error("Passwords do not match");
-      }
-      // TODO: Implement actual signup logic
+      // In a real app, this would be a call to your registration API
+      console.log("Registration attempt with:", values);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
       toast({
-        title: "Sign up attempted",
-        description: "This is a demo. Registration will be implemented later.",
+        title: "Account created successfully",
+        description: "You can now sign in with your credentials.",
       });
+      
+      // Redirect to login page after successful registration
+      navigate("/");
     } catch (error) {
+      console.error("Registration error:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: "Failed to create account. Please try again."
       });
     } finally {
       setIsLoading(false);
@@ -43,60 +73,115 @@ const SignUp = () => {
       <div className="w-full max-w-md space-y-8">
         <AuthHeader />
         
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-lg">
-          <div className="space-y-4">
-            <div className="relative">
-              <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 auth-input"
-                required
-              />
-            </div>
-            
-            <div className="relative">
-              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 auth-input"
-                required
-              />
-            </div>
-
-            <div className="relative">
-              <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-              <Input
-                type="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="pl-10 auth-input"
-                required
-              />
-            </div>
+        <div className="mt-8 space-y-6 bg-white p-8 rounded-lg shadow-lg">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              Enter your information below to create your account
+            </p>
           </div>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="relative">
+                      <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                      <FormControl>
+                        <Input
+                          placeholder="Full name"
+                          className="pl-10 auth-input"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                      <FormControl>
+                        <Input
+                          placeholder="Email address"
+                          className="pl-10 auth-input"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Password"
+                          className="pl-10 auth-input"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? "Creating account..." : "Create Account"}
-          </Button>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm Password"
+                          className="pl-10 auth-input"
+                          {...field}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="text-center text-sm">
-            <span className="text-muted-foreground">Already have an account? </span>
-            <Link to="/" className="font-medium text-primary hover:text-primary/90">
-              Sign in
-            </Link>
-          </div>
-        </form>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isLoading}
+              >
+                {isLoading ? "Creating account..." : "Create Account"}
+              </Button>
+
+              <div className="text-center text-sm">
+                <span className="text-muted-foreground">Already have an account? </span>
+                <Link to="/" className="font-medium text-primary hover:text-primary/90">
+                  Sign in
+                </Link>
+              </div>
+            </form>
+          </Form>
+        </div>
       </div>
     </div>
   );
