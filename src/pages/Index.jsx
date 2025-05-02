@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
@@ -17,6 +17,15 @@ const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  // Load remembered email from localStorage on component mount
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+    if (rememberedEmail) {
+      setEmail(rememberedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -25,6 +34,13 @@ const Index = () => {
       // In a real app, authenticate against your backend here
       // For now, we'll just simulate a successful login
       setTimeout(() => {
+        // Save email to localStorage if rememberMe is checked
+        if (rememberMe) {
+          localStorage.setItem("rememberedEmail", email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+
         toast({
           title: "Login successful",
           description: "Welcome to the IT Management dashboard.",
@@ -86,10 +102,15 @@ const Index = () => {
 
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <Checkbox id="remember" checked={rememberMe} onCheckedChange={(checked) => setRememberMe(checked === true)} />
+                <Checkbox 
+                  id="remember" 
+                  checked={rememberMe} 
+                  onCheckedChange={(checked) => setRememberMe(checked === true)} 
+                />
                 <label
                   htmlFor="remember"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  onClick={() => setRememberMe(!rememberMe)}
                 >
                   Remember me
                 </label>
