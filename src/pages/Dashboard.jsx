@@ -1,14 +1,33 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Lock, Home, Settings } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { 
+  User, Users, ShoppingBag, Package, BarChart2, 
+  MessageSquare, LogOut, Database, 
+  Box, FileText, Settings, Search
+} from "lucide-react";
+
+// Import sidebar components
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 const Dashboard = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [activeModule, setActiveModule] = useState("dashboard");
+  const navigate = useNavigate();
   
   // Placeholder function for demonstration
   const handleLogout = () => {
@@ -22,7 +41,7 @@ const Dashboard = () => {
       });
       
       // Redirect to login page
-      window.location.href = "/";
+      navigate("/");
       setIsLoading(false);
     }, 1000);
   };
@@ -57,170 +76,301 @@ const Dashboard = () => {
   };
   
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      {/* Sidebar Navigation */}
-      <div className="w-64 bg-white shadow-sm border-r">
-        <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">IT Asset Management</h2>
-        </div>
-        <nav className="p-2">
-          <ul className="space-y-1">
-            <NavItem 
-              icon={<Home />} 
-              label="Dashboard" 
-              active={activeModule === "dashboard"} 
-              onClick={() => handleNavigation("dashboard")} 
-            />
-            <NavItem 
-              icon={<User />} 
-              label="User Management" 
-              active={activeModule === "users"} 
-              onClick={() => handleNavigation("users")} 
-            />
-            <NavItem 
-              icon={<Settings />} 
-              label="Purchase & Procurement" 
-              active={activeModule === "purchases"} 
-              onClick={() => handleNavigation("purchases")} 
-            />
-            <NavItem 
-              icon={<Settings />} 
-              label="Material Requests" 
-              active={activeModule === "materials"} 
-              onClick={() => handleNavigation("materials")} 
-            />
-            <NavItem 
-              icon={<Settings />} 
-              label="Stock Management" 
-              active={activeModule === "stock"} 
-              onClick={() => handleNavigation("stock")} 
-            />
-            <NavItem 
-              icon={<Settings />} 
-              label="Asset Traceability" 
-              active={activeModule === "assets"} 
-              onClick={() => handleNavigation("assets")} 
-            />
-            <NavItem 
-              icon={<Settings />} 
-              label="Chatbot Interface" 
-              active={activeModule === "chatbot"} 
-              onClick={() => handleNavigation("chatbot")} 
-            />
-          </ul>
-        </nav>
-      </div>
-      
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-auto">
-        <header className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <h1 className="text-2xl font-bold capitalize">{activeModule}</h1>
-            <Button onClick={handleLogout} disabled={isLoading} variant="outline">
-              {isLoading ? "Logging out..." : "Logout"}
-            </Button>
-          </div>
-        </header>
+    <SidebarProvider>
+      <div className="min-h-screen flex bg-gray-50 w-full">
+        {/* Sidebar Navigation */}
+        <Sidebar side="left" variant="sidebar">
+          <SidebarHeader>
+            <div className="px-3 py-2">
+              <h2 className="text-xl font-bold">IT Asset Management</h2>
+              <p className="text-xs text-muted-foreground">Manage your IT assets efficiently</p>
+            </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Dashboard"
+                  isActive={activeModule === "dashboard"}
+                  onClick={() => handleNavigation("dashboard")}
+                >
+                  <BarChart2 className="h-5 w-5" />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="User Management"
+                  isActive={activeModule === "users"}
+                  onClick={() => handleNavigation("users")}
+                >
+                  <Users className="h-5 w-5" />
+                  <span>User Management</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Purchase & Procurement"
+                  isActive={activeModule === "purchases"}
+                  onClick={() => handleNavigation("purchases")}
+                >
+                  <ShoppingBag className="h-5 w-5" />
+                  <span>Purchase & Procurement</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Material Requests"
+                  isActive={activeModule === "materials"}
+                  onClick={() => handleNavigation("materials")}
+                >
+                  <FileText className="h-5 w-5" />
+                  <span>Material Requests</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Stock Management"
+                  isActive={activeModule === "stock"}
+                  onClick={() => handleNavigation("stock")}
+                >
+                  <Database className="h-5 w-5" />
+                  <span>Stock Management</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Asset Traceability"
+                  isActive={activeModule === "assets"}
+                  onClick={() => handleNavigation("assets")}
+                >
+                  <Box className="h-5 w-5" />
+                  <span>Asset Traceability</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  tooltip="Chatbot Interface"
+                  isActive={activeModule === "chatbot"}
+                  onClick={() => handleNavigation("chatbot")}
+                >
+                  <MessageSquare className="h-5 w-5" />
+                  <span>Chatbot Interface</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+            <div className="px-3 py-2">
+              <Button 
+                onClick={handleLogout} 
+                disabled={isLoading} 
+                variant="outline"
+                className="w-full flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                {isLoading ? "Logging out..." : "Logout"}
+              </Button>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
         
-        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            {renderModuleContent()}
-          </div>
-        </main>
+        {/* Main Content Area */}
+        <div className="flex-1 overflow-auto">
+          <header className="bg-white shadow-sm">
+            <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+              <div className="flex items-center">
+                <SidebarTrigger className="mr-4" />
+                <h1 className="text-2xl font-bold capitalize">{activeModule}</h1>
+              </div>
+              <div className="flex items-center gap-4">
+                <Button variant="outline" size="sm">
+                  <Search className="h-4 w-4 mr-2" />
+                  Search
+                </Button>
+                <Button variant="outline" size="icon" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4" />
+                  <span className="sr-only">Logout</span>
+                </Button>
+              </div>
+            </div>
+          </header>
+          
+          <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <div className="px-4 py-6 sm:px-0">
+              {renderModuleContent()}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
-  );
-};
-
-// Navigation Item Component
-const NavItem = ({ icon, label, active, onClick }) => {
-  return (
-    <li 
-      className={`flex items-center space-x-2 px-3 py-2 rounded-md cursor-pointer ${
-        active ? "bg-gray-100 text-primary" : "hover:bg-gray-50"
-      }`}
-      onClick={onClick}
-    >
-      {icon}
-      <span>{label}</span>
-    </li>
+    </SidebarProvider>
   );
 };
 
 // Dashboard Overview Component
 const DashboardOverview = () => {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <Card>
-        <CardHeader>
-          <CardTitle>User Management</CardTitle>
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            User Management
+          </CardTitle>
           <CardDescription>Manage system users and permissions</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Register users, manage roles, and control access to the system.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/users/register</li>
+              <li>GET /api/users</li>
+              <li>GET /api/users/:id</li>
+              <li>PUT /api/users/:id</li>
+              <li>DELETE /api/users/:id</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Purchase & Procurement</CardTitle>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-primary" />
+            Purchase & Procurement
+          </CardTitle>
           <CardDescription>Track purchase requests and orders</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Create and manage purchase requests for IT assets and equipment.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/purchases</li>
+              <li>GET /api/purchases</li>
+              <li>GET /api/purchases/:id</li>
+              <li>PUT /api/purchases/:id</li>
+              <li>DELETE /api/purchases/:id</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Material Requests</CardTitle>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-primary" />
+            Material Requests
+          </CardTitle>
           <CardDescription>Handle new-hire equipment requests</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Process and approve material requests for new employees.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/material-requests</li>
+              <li>GET /api/material-requests</li>
+              <li>GET /api/material-requests/:id</li>
+              <li>PUT /api/material-requests/:id</li>
+              <li>DELETE /api/material-requests/:id</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Stock Management</CardTitle>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Database className="h-5 w-5 text-primary" />
+            Stock Management
+          </CardTitle>
           <CardDescription>Inventory control system</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Monitor stock levels and manage inventory of IT assets.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/stock</li>
+              <li>GET /api/stock</li>
+              <li>GET /api/stock/:id</li>
+              <li>PUT /api/stock/:id</li>
+              <li>DELETE /api/stock/:id</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Asset Traceability</CardTitle>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <Box className="h-5 w-5 text-primary" />
+            Asset Traceability
+          </CardTitle>
           <CardDescription>Track asset movement and history</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Log and monitor the movement and usage of IT assets.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/asset-trace</li>
+              <li>GET /api/asset-trace</li>
+              <li>GET /api/asset-trace/:id</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Chatbot Interface</CardTitle>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center gap-2">
+            <MessageSquare className="h-5 w-5 text-primary" />
+            Chatbot Interface
+          </CardTitle>
           <CardDescription>AI-powered assistance</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-gray-500">
             Interact with the system using natural language processing.
           </p>
+          <div className="mt-4 bg-slate-50 rounded-md p-3">
+            <h4 className="text-xs font-semibold text-gray-600">API Endpoints:</h4>
+            <ul className="mt-1 text-xs text-gray-500 space-y-1">
+              <li>POST /api/chatbot</li>
+            </ul>
+          </div>
         </CardContent>
+        <CardFooter>
+          <Button variant="outline" size="sm" className="w-full">Access Module</Button>
+        </CardFooter>
       </Card>
     </div>
   );
@@ -231,14 +381,17 @@ const UserManagement = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>User Management</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-primary" />
+          User Management
+        </CardTitle>
         <CardDescription>Manage user accounts and permissions</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Admin Access Only</h3>
@@ -257,7 +410,10 @@ const UserManagement = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">User management functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          This module provides comprehensive user management capabilities, allowing administrators to create
+          and manage user accounts with various permission levels.
+        </p>
       </CardContent>
     </Card>
   );
@@ -267,14 +423,17 @@ const PurchaseProcurement = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Purchase & Procurement</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <ShoppingBag className="h-5 w-5 text-primary" />
+          Purchase & Procurement
+        </CardTitle>
         <CardDescription>Manage purchase requests and orders</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Admin Access Required</h3>
@@ -293,7 +452,10 @@ const PurchaseProcurement = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">Purchase and procurement functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          The Purchase & Procurement module streamlines the process of requesting and acquiring new IT assets,
+          with approval workflows and tracking capabilities.
+        </p>
       </CardContent>
     </Card>
   );
@@ -303,14 +465,17 @@ const MaterialRequests = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Material Requests</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-primary" />
+          Material Requests
+        </CardTitle>
         <CardDescription>Handle new-hire equipment requests</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Authentication Required</h3>
@@ -329,7 +494,10 @@ const MaterialRequests = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">Material requests functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          This module simplifies the equipment request process for new employees, ensuring they have all
+          necessary IT resources from day one.
+        </p>
       </CardContent>
     </Card>
   );
@@ -339,14 +507,17 @@ const StockManagement = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Stock Management</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Database className="h-5 w-5 text-primary" />
+          Stock Management
+        </CardTitle>
         <CardDescription>Manage IT asset inventory</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Admin Access Required</h3>
@@ -365,7 +536,10 @@ const StockManagement = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">Stock management functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          The Stock Management module provides real-time visibility into inventory levels and helps
+          prevent shortages of critical IT assets.
+        </p>
       </CardContent>
     </Card>
   );
@@ -375,14 +549,17 @@ const AssetTraceability = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Asset Traceability</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Box className="h-5 w-5 text-primary" />
+          Asset Traceability
+        </CardTitle>
         <CardDescription>Track asset movement and history</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Admin Access Required</h3>
@@ -399,7 +576,10 @@ const AssetTraceability = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">Asset traceability functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          Asset Traceability provides a complete history of each IT asset, from acquisition through
+          deployment, maintenance, and eventual retirement.
+        </p>
       </CardContent>
     </Card>
   );
@@ -409,14 +589,17 @@ const ChatbotInterface = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Chatbot Interface</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <MessageSquare className="h-5 w-5 text-primary" />
+          Chatbot Interface
+        </CardTitle>
         <CardDescription>AI-powered assistance</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="rounded-md bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Lock className="h-5 w-5 text-yellow-400" />
+              <User className="h-5 w-5 text-yellow-400" />
             </div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-yellow-800">Public Interface</h3>
@@ -431,7 +614,10 @@ const ChatbotInterface = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600">Chatbot interface functionality will be implemented here.</p>
+        <p className="text-gray-600">
+          The AI-powered chatbot provides instant assistance and information about IT assets and resources,
+          helping users find what they need without navigating complex interfaces.
+        </p>
       </CardContent>
     </Card>
   );
