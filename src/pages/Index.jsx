@@ -94,9 +94,9 @@ const Index = () => {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm font-medium text-primary hover:text-primary/90">
+              <Link to="/forgot-password" className="text-sm font-medium text-primary hover:text-primary/90">
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </div>
 
